@@ -33,3 +33,6 @@ jobs:
 
     - name: Run Tests
       run: pytest
+
+    env:
+        CI: true
