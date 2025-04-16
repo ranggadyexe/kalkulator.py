@@ -93,8 +93,8 @@ class Calculator:
                 command=lambda x=digit: self.add_to_expression(x))
             button.grid(row=grid_value[0], column=grid_value[1], sticky=tk.NSEW)
 
-    def append_operator(self, operator):
-        self.current_expression += operator
+    def append_operator(self, op_key):
+        self.current_expression += op_key
         self.total_expression += self.current_expression
         self.current_expression = ""
         self.update_total_label()
@@ -102,7 +102,7 @@ class Calculator:
 
     def create_operator_buttons(self):
         i = 0
-        for operator, symbol in self.operations.items():
+        for op_key, symbol in self.operations.items():
             button = tk.Button(
                 self.buttons_frame,
                 text=symbol,
@@ -110,7 +110,7 @@ class Calculator:
                 fg=LABEL_COLOR,
                 font=DEFAULT_FONT_STYLE,
                 borderwidth=0,
-                command=lambda x=operator: self.append_operator(x))
+                command=lambda x=op_key: self.append_operator(x))
             button.grid(row=i, column=4, sticky=tk.NSEW)
             i += 1
 
@@ -121,10 +121,8 @@ class Calculator:
         self.create_sqrt_button()
 
     def create_clear_button(self):
-        button = tk.Button(
-    self.buttons_frame, text="C", bg=OFF_WHITE, fg=LABEL_COLOR,
-    font=DEFAULT_FONT_STYLE, borderwidth=0, command=self.clear)
-
+        button = tk.Button(self.buttons_frame, text="C", bg=OFF_WHITE, fg=LABEL_COLOR,
+                           font=DEFAULT_FONT_STYLE, borderwidth=0, command=self.clear)
         button.grid(row=0, column=1, sticky=tk.NSEW)
 
     def create_equals_button(self):
@@ -171,7 +169,7 @@ class Calculator:
             value = float(self.current_expression)
             squared = value ** 2
             self.current_expression = str(squared)
-        except Exception:
+        except BaseException:
             self.current_expression = "ERROR"
         self.update_label()
 
@@ -180,7 +178,7 @@ class Calculator:
             value = float(self.current_expression)
             root = value ** 0.5
             self.current_expression = str(root)
-        except Exception:
+        except BaseException:
             self.current_expression = "ERROR"
         self.update_label()
 
@@ -191,7 +189,7 @@ class Calculator:
             result = self.safe_eval(self.total_expression)
             self.current_expression = str(result)
             self.total_expression = ""
-        except Exception:
+        except BaseException:
             self.current_expression = "ERROR"
         self.update_label()
 
@@ -217,7 +215,6 @@ class Calculator:
         if num:
             tokens.append(float(num))
 
-        # Compute the expression (left to right)
         result = tokens[0]
         i = 1
         while i < len(tokens):
@@ -229,8 +226,8 @@ class Calculator:
 
     def update_total_label(self):
         expression = self.total_expression
-        for op, symbol in self.operations.items():
-            expression = expression.replace(operator, f' {symbol} ')
+        for op_key, symbol in self.operations.items():
+            expression = expression.replace(op_key, f' {symbol} ')
         self.total_label.config(text=expression)
 
     def update_label(self):
@@ -241,12 +238,13 @@ class Calculator:
         for key in self.digits:
             self.window.bind(
                 str(key),
-                lambda event,
-                digit=key: self.add_to_expression(digit))
-        for key in self.operations:
+                lambda event, digit=key: self.add_to_expression(digit)
+            )
+        for op_key in self.operations:
             self.window.bind(
-                key,
-                lambda event, op=key: self.append_operator(op))
+                op_key,
+                lambda event, op=op_key: self.append_operator(op)
+            )
 
     def run(self):
         self.window.mainloop()
