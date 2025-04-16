@@ -1,0 +1,4 @@
+numpy
+bandit
+flake8
+pytest
