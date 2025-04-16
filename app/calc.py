@@ -1,5 +1,7 @@
 import tkinter as tk
 import operator
+from tkinter import Tk, Entry, Button
+from app.logic import safe_eval, square, sqrt
 
 LARGE_FONT_STYLE = ("Arial", 40, "bold")
 SMALL_FONT_STYLE = ("Arial", 16)
@@ -12,10 +14,19 @@ LIGHT_BLUE = "#CCEDFF"
 LIGHT_GRAY = "#F5F5F5"
 LABEL_COLOR = "#25265E"
 
+import os
+import unittest
+
+@unittest.skipIf("CI" in os.environ, "Skip GUI tests in CI environment")
+class TestTkinterThings(unittest.TestCase):
+    def test_gui_launch(self):
+        root = tk.Tk()
+        ...
+
 
 class Calculator:
     def __init__(self):
-        self.window = tk.Tk()
+        self.window = Tk()
         self.window.geometry("375x667")
         self.window.resizable(0, 0)
         self.window.title("Calculator")
