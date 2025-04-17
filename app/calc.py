@@ -109,7 +109,8 @@ class Calculator:
         button.grid(row=0, column=1, sticky=tk.NSEW)
 
     def square(self):
-        self.current_expression = square(self.current_expression)
+        result = square(self.current_expression)
+        self.current_expression = str(result)
         self.update_label()
 
     def create_square_button(self):
@@ -118,7 +119,8 @@ class Calculator:
         button.grid(row=0, column=2, sticky=tk.NSEW)
 
     def sqrt(self):
-        self.current_expression = sqrt(self.current_expression)
+        result = sqrt(self.current_expression)
+        self.current_expression = str(result)
         self.update_label()
 
     def create_sqrt_button(self):
@@ -129,7 +131,8 @@ class Calculator:
     def evaluate(self):
         self.total_expression += self.current_expression
         self.update_total_label()
-        self.current_expression = safe_eval(self.total_expression)
+        result = safe_eval(self.total_expression)
+        self.current_expression = str(result)
         self.total_expression = ""
         self.update_label()
 

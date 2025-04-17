@@ -1,4 +1,5 @@
-import pytest
+# tests/test_calc.py
+
 from app.logic import safe_eval, square, sqrt
 
 def test_safe_eval_addition():
@@ -14,7 +15,7 @@ def test_safe_eval_division():
     assert safe_eval("8 / 2") == 4.0
 
 def test_square():
-    assert square("5") == 25
+    assert square("5") == 25.0
 
 def test_sqrt():
     assert sqrt("9") == 3.0

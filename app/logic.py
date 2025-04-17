@@ -1,19 +1,21 @@
-def safe_eval(expr):
-    try:
-        return str(eval(expr, {"__builtins__": {}}, {}))
-    except Exception:
-        return "Error"
+# app/logic.py
 
-def square(value):
-    try:
-        num = float(value)
-        return str(num ** 2)
-    except Exception:
-        return "Error"
+import math
 
-def sqrt(value):
+def safe_eval(expression):
     try:
-        num = float(value)
-        return str(num ** 0.5)
+        return eval(expression)
     except Exception:
-        return "Error"
+        return 0
+
+def square(x):
+    try:
+        return float(x) ** 2
+    except Exception:
+        return 0
+
+def sqrt(x):
+    try:
+        return math.sqrt(float(x))
+    except Exception:
+        return 0
