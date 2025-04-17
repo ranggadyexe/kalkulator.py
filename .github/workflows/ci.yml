@@ -19,11 +19,11 @@ jobs:
 
       - name: Run Bandit and Save Report
         run: |
-          bandit -r app/ -ll -q -f html -o bandit-report.html
+          bandit -r app/ -ll -q -f txt -o bandit-report.txt
         continue-on-error: true  # Supaya tetap jalan meskipun ada issue
 
       - name: Upload Bandit Report
         uses: actions/upload-artifact@v4
         with:
           name: bandit-report
-          path: bandit-report.html
+          path: bandit-report.txt
