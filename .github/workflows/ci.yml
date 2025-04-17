@@ -20,6 +20,10 @@ jobs:
       - name: Run Bandit and Save Report
         run: |
           bandit -r app/ -ll -q -f json -o bandit-report.json || true
+
+      - name: Run Pytest
+        run: pytest
+
         continue-on-error: true  # Supaya tetap jalan meskipun ada issue
 
       - name: Upload Bandit Report
