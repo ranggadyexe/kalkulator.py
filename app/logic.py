@@ -1,19 +1,19 @@
-import math
-
 def safe_eval(expr):
     try:
-        return eval(expr, {"__builtins__": None, "sqrt": math.sqrt})
-    except:
+        return str(eval(expr, {"__builtins__": {}}, {}))
+    except Exception:
         return "Error"
 
-def square(x):
+def square(value):
     try:
-        return float(x) ** 2
-    except:
+        num = float(value)
+        return str(num ** 2)
+    except Exception:
         return "Error"
 
-def sqrt(x):
+def sqrt(value):
     try:
-        return math.sqrt(float(x))
-    except:
+        num = float(value)
+        return str(num ** 0.5)
+    except Exception:
         return "Error"
