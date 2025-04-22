@@ -1,0 +1,28 @@
+stages:
+  - test
+  - security
+
+before_script:
+  - python -m venv venv
+  - source venv/Scripts/activate  # untuk Windows
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+  - pip install bandit
+
+test:
+  stage: test
+  tags:
+    - pc_lab
+  script:
+    - pytest
+
+security:
+  stage: security
+  tags:
+    - pc_lab
+  script:
+    - bandit -r app/ -ll -q -f json -o bandit-report.json || true
+  artifacts:
+    when: always
+    paths:
+      - bandit-report.json
