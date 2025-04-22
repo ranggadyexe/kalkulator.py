@@ -2,27 +2,22 @@ stages:
   - test
   - security
 
-before_script:
-  - python -m venv venv
-  - source venv/Scripts/activate  # untuk Windows
-  - pip install --upgrade pip
-  - pip install -r requirements.txt
-  - pip install bandit
-
-test:
+pytest:
   stage: test
-  tags:
-    - pc_lab
+  image: python:3.10
+  before_script:
+    - pip install -r requirements.txt
+    - pip install pytest
   script:
-    - pytest
+    - pytest tests/
 
-security:
+semgrep:
   stage: security
-  tags:
-    - pc_lab
+  image: returntocorp/semgrep
   script:
-    - bandit -r app/ -ll -q -f json -o bandit-report.json || true
+    - semgrep --config=auto --json > semgrep-report.json
   artifacts:
-    when: always
     paths:
-      - bandit-report.json
+      - semgrep-report.json
+    when: always
+    expire_in: 1 week
