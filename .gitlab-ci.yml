@@ -1,23 +1,33 @@
 stages:
+  - deploy
   - test
-  - security
 
-pytest:
+variables:
+  SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY
+
+before_script:
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan -H 192.168.74.56 >> ~/.ssh/known_hosts
+
+deploy-to-pc-lab:
+  stage: deploy
+  script:
+    - ssh rangga@192.168.74.56 '
+        cd ~/kalkulator-py || git clone git@gitlab.com:ranggadewa853/kalkulator-py.git ~/kalkulator-py &&
+        cd ~/kalkulator-py &&
+        git pull &&
+        pip3 install -r requirements.txt
+      '
+
+run-tests-on-pc-lab:
   stage: test
-  image: python:3.12.4
-  before_script:
-    - pip install -r requirements.txt
-    - pip install pytest
   script:
-    - pytest tests/
-
-semgrep:
-  stage: security
-  image: returntocorp/semgrep
-  script:
-    - semgrep --config=auto --json > semgrep-report.json
-  artifacts:
-    paths:
-      - semgrep-report.json
-    when: always
-    expire_in: 1 week
+    - ssh rangga@192.168.74.56 '
+        cd ~/kalkulator-py &&
+        pytest tests/ > result.log; cat result.log &&
+        semgrep --config auto app/ > semgrep.log; cat semgrep.log
+      '
